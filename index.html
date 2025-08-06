@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DreamWeave - Premium Bedsheets</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f7fa;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2c3e50;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #2c3e50;
+        }
+
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: #2c3e50;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff4757;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 80px;
+            min-height: calc(100vh - 160px);
+            padding: 2rem 0;
+        }
+
+        .page {
+            display: none;
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Homepage */
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            background: #2c3e50;
+            border-radius: 15px;
+            color: white;
+            margin-bottom: 3rem;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .cta-button {
+            background: transparent;
+            color: white;
+            padding: 1rem 2rem;
+            border: 2px solid white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            background: white;
+            color: #2c3e50;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .feature {
+            text-align: center;
+            padding: 2rem;
+            background: #ecf0f1;
+            border-radius: 12px;
+            color: #2c3e50;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .feature h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Products */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .product-description {
+            color: #666;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .add-to-cart {
+            width: 100%;
+            padding: 0.8rem;
+            background: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .add-to-cart:hover {
+            background: #34495e;
+            transform: translateY(-2px);
+        }
+
+        /* Product Detail */
+        .product-detail {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .product-detail-image {
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-detail-info h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .product-detail-price {
+            font-size: 2rem;
+            color: #2c3e50;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+        }
+
+        .product-detail-description {
+            margin-bottom: 2rem;
+            line-height: 1.8;
+            color: #666;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .quantity-btn {
+            background: #f1f2f6;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: #333;
+        }
+
+        .quantity-input {
+            width: 60px;
+            height: 40px;
+            text-align: center;
+            border: 2px solid #f1f2f6;
+            border-radius: 8px;
+            font-size: 1.1rem;
+        }
+
+        /* Cart */
+        .cart-items {
+            margin: 2rem 0;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 15px;
+            margin-bottom: 1rem;
+        }
+
+        .cart-item-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .cart-item-price {
+            color: #2c3e50;
+            font-weight: bold;
+        }
+
+        .cart-summary {
+            background: #2c3e50;
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .cart-total {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .checkout-btn {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .checkout-btn:hover {
+            background: white;
+            color: #2c3e50;
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 4rem;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .product-detail {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .cart-item {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="#" class="logo">DreamWeave</a>
+                <ul class="nav-links">
+                    <li><a href="#" onclick="showPage('home')" class="active">Home</a></li>
+                    <li><a href="#" onclick="showPage('products')">Products</a></li>
+                    <li><a href="#" onclick="showPage('about')">About</a></li>
+                </ul>
+                <div class="cart-icon" onclick="showPage('cart')">
+                    🛒
+                    <span class="cart-count" id="cartCount">0</span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <!-- Homepage -->
+            <div id="home" class="page active">
+                <div class="hero">
+                    <h1>Sleep in Luxury</h1>
+                    <p>Discover our premium collection of ultra-soft bedsheets crafted for the perfect night's sleep</p>
+                    <button class="cta-button" onclick="showPage('products')">Shop Now</button>
+                </div>
+                
+                <div class="features">
+                    <div class="feature">
+                        <h3>🌟 Premium Quality</h3>
+                        <p>Made from the finest materials for ultimate comfort and durability</p>
+                    </div>
+                    <div class="feature">
+                        <h3>🚚 Free Shipping</h3>
+                        <p>Enjoy free delivery on all orders over $50</p>
+                    </div>
+                    <div class="feature">
+                        <h3>💤 Sleep Guarantee</h3>
+                        <p>30-day money-back guarantee for the perfect sleep experience</p>
+                    </div>
+                </div>
+                
+                <h2 style="text-align: center; margin: 3rem 0 2rem 0; font-size: 2.5rem; color: #333;">Featured Products</h2>
+                <div class="products-grid" id="homeProductsGrid">
+                    <!-- Featured products will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Products Page -->
+            <div id="products" class="page">
+                <h2 style="text-align: center; margin-bottom: 2rem; font-size: 2.5rem; color: #333;">Our Collection</h2>
+                <div class="products-grid" id="productsGrid">
+                    <!-- Products will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Product Detail Page -->
+            <div id="productDetail" class="page">
+                <div class="product-detail" id="productDetailContent">
+                    <!-- Product detail will be loaded here -->
+                </div>
+            </div>
+
+            <!-- About Page -->
+            <div id="about" class="page">
+                <h2 style="text-align: center; margin-bottom: 2rem; font-size: 2.5rem; color: #333;">About DreamWeave</h2>
+                <div style="text-align: center; max-width: 800px; margin: 0 auto; line-height: 1.8; color: #666;">
+                    <p style="margin-bottom: 2rem; font-size: 1.2rem;">At DreamWeave, we believe that quality sleep is the foundation of a beautiful life. Our mission is to create the most comfortable, luxurious bedsheets that transform your bedroom into a sanctuary of rest and relaxation.</p>
+                    
+                    <div class="features">
+                        <div class="feature">
+                            <h3>✨ Craftsmanship</h3>
+                            <p>Each sheet is carefully crafted with attention to every detail, ensuring lasting quality and comfort</p>
+                        </div>
+                        <div class="feature">
+                            <h3>🌱 Sustainable</h3>
+                            <p>We use eco-friendly materials and sustainable manufacturing processes</p>
+                        </div>
+                        <div class="feature">
+                            <h3>❤️ Customer First</h3>
+                            <p>Your satisfaction is our priority with dedicated customer service and quality guarantee</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cart Page -->
+            <div id="cart" class="page">
+                <h2 style="text-align: center; margin-bottom: 2rem; font-size: 2.5rem; color: #333;">Your Cart</h2>
+                <div id="cartContent">
+                    <!-- Cart content will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Product data
+        const products = [
+            {
+                id: 1,
+                name: "Cotton Cloud Collection",
+                price: 89.99,
+                image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=300&fit=crop",
+                description: "Ultra-soft 100% organic cotton bedsheets with a silky smooth finish. Perfect thread count for ultimate comfort."
+            },
+            {
+                id: 2,
+                name: "Bamboo Bliss Set",
+                price: 124.99,
+                image: "https://images.unsplash.com/photo-1505693314120-0d443867891c?w=400&h=300&fit=crop",
+                description: "Naturally hypoallergenic bamboo fiber sheets with moisture-wicking properties and temperature regulation."
+            },
+            {
+                id: 3,
+                name: "Linen Luxury Line",
+                price: 149.99,
+                image: "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=400&h=300&fit=crop",
+                description: "Premium Belgian linen sheets that get softer with every wash. Breathable and perfect for all seasons."
+            },
+            {
+                id: 5,
+                name: "Percale Paradise",
+                price: 94.99,
+                image: "https://images.unsplash.com/photo-1631049552240-59c37f38802b?w=400&h=300&fit=crop",
+                description: "Crisp and cool percale weave sheets that provide excellent breathability for hot sleepers."
+            },
+            {
+                id: 6,
+                name: "Microfiber Marvel",
+                price: 49.99,
+                image: "https://images.unsplash.com/photo-1540932239986-30128078f3c5?w=400&h=300&fit=crop",
+                description: "Affordable luxury with ultra-fine microfiber that's wrinkle-resistant and easy to care for."
+            }
+        ];
+
+        // Cart functionality
+        let cart = [];
+
+        function updateCartCount() {
+            const cartCount = document.getElementById('cartCount');
+            cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+        }
+
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            const existingItem = cart.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({...product, quantity: 1});
+            }
+            
+            updateCartCount();
+            showNotification('Added to cart!');
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCartCount();
+            if (document.getElementById('cart').classList.contains('active')) {
+                loadCart();
+            }
+        }
+
+        function updateQuantity(productId, quantity) {
+            const item = cart.find(item => item.id === productId);
+            if (item) {
+                item.quantity = Math.max(1, quantity);
+                updateCartCount();
+                loadCart();
+            }
+        }
+
+        function showNotification(message) {
+            // Simple notification - you could enhance this
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: #4CAF50;
+                color: white;
+                padding: 1rem 2rem;
+                border-radius: 10px;
+                z-index: 10000;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 2000);
+        }
+
+        // Page navigation
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Remove active class from nav links
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+            
+            // Add active class to corresponding nav link
+            const navLink = document.querySelector(`[onclick="showPage('${pageId}')"]`);
+            if (navLink) {
+                navLink.classList.add('active');
+            }
+            
+            // Load content based on page
+            if (pageId === 'products') {
+                loadProducts();
+            } else if (pageId === 'cart') {
+                loadCart();
+            }
+        }
+
+        function loadProducts() {
+            const productsGrid = document.getElementById('productsGrid');
+            productsGrid.innerHTML = products.map(product => `
+                <div class="product-card" onclick="showProductDetail(${product.id})">
+                    <img src="${product.image}" alt="${product.name}" class="product-image">
+                    <div class="product-info">
+                        <h3 class="product-title">${product.name}</h3>
+                        <p class="product-description">${product.description}</p>
+                        <div class="product-price">$${product.price}</div>
+                        <button class="add-to-cart" onclick="event.stopPropagation(); addToCart(${product.id})">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showProductDetail(productId) {
+            const product = products.find(p => p.id === productId);
+            const productDetailContent = document.getElementById('productDetailContent');
+            
+            productDetailContent.innerHTML = `
+                <div>
+                    <img src="${product.image}" alt="${product.name}" class="product-detail-image">
+                </div>
+                <div class="product-detail-info">
+                    <h2>${product.name}</h2>
+                    <div class="product-detail-price">$${product.price}</div>
+                    <div class="product-detail-description">
+                        <p>${product.description}</p>
+                        <p style="margin-top: 1rem;">Transform your bedroom into a luxurious retreat with our premium bedsheet collection. Each set includes fitted sheet, flat sheet, and pillowcases crafted from the finest materials for ultimate comfort and durability.</p>
+                        <ul style="margin-top: 1rem; padding-left: 1.5rem;">
+                            <li>Machine washable for easy care</li>
+                            <li>Available in multiple sizes</li>
+                            <li>Fade-resistant colors</li>
+                            <li>30-day satisfaction guarantee</li>
+                        </ul>
+                    </div>
+                    <div class="quantity-selector">
+                        <span>Quantity:</span>
+                        <button class="quantity-btn" onclick="updateDetailQuantity(-1)">-</button>
+                        <input type="number" class="quantity-input" id="detailQuantity" value="1" min="1">
+                        <button class="quantity-btn" onclick="updateDetailQuantity(1)">+</button>
+                    </div>
+                    <button class="add-to-cart" style="width: 100%; padding: 1rem; font-size: 1.1rem;" onclick="addMultipleToCart(${product.id})">
+                        Add to Cart
+                    </button>
+                    <button onclick="showPage('products')" style="width: 100%; margin-top: 1rem; padding: 1rem; background: #f1f2f6; color: #333; border: none; border-radius: 10px; cursor: pointer;">
+                        Back to Products
+                    </button>
+                </div>
+            `;
+            
+            showPage('productDetail');
+        }
+
+        function updateDetailQuantity(change) {
+            const quantityInput = document.getElementById('detailQuantity');
+            const newQuantity = Math.max(1, parseInt(quantityInput.value) + change);
+            quantityInput.value = newQuantity;
+        }
+
+        function addMultipleToCart(productId) {
+            const quantity = parseInt(document.getElementById('detailQuantity').value);
+            const product = products.find(p => p.id === productId);
+            const existingItem = cart.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({...product, quantity: quantity});
+            }
+            
+            updateCartCount();
+            showNotification(`Added ${quantity} item(s) to cart!`);
+        }
+
+        function loadCart() {
+            const cartContent = document.getElementById('cartContent');
+            
+            if (cart.length === 0) {
+                cartContent.innerHTML = `
+                    <div class="empty-cart">
+                        <h3>Your cart is empty</h3>
+                        <p>Start shopping to add items to your cart</p>
+                        <button class="cta-button" onclick="showPage('products')" style="margin-top: 2rem;">
+                            Continue Shopping
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            cartContent.innerHTML = `
+                <div class="cart-items">
+                    ${cart.map(item => `
+                        <div class="cart-item">
+                            <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+                            <div class="cart-item-info">
+                                <div class="cart-item-title">${item.name}</div>
+                                <div class="cart-item-price">$${item.price}</div>
+                            </div>
+                            <div class="quantity-selector">
+                                <button class="quantity-btn" onclick="updateQuantity(${item.id}, ${item.quantity - 1})">-</button>
+                                <input type="number" class="quantity-input" value="${item.quantity}" min="1" 
+                                       onchange="updateQuantity(${item.id}, this.value)">
+                                <button class="quantity-btn" onclick="updateQuantity(${item.id}, ${item.quantity + 1})">+</button>
+                            </div>
+                            <button onclick="removeFromCart(${item.id})" 
+                                    style="background: #ff4757; color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer;">
+                                Remove
+                            </button>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="cart-summary">
+                    <div class="cart-total">Total: $${total.toFixed(2)}</div>
+                    <button class="checkout-btn" onclick="checkout()">Proceed to Checkout</button>
+                </div>
+            `;
+        }
+
+        function checkout() {
+            alert('Thank you for your purchase! This is a demo - no actual payment processed.');
+            cart = [];
+            updateCartCount();
+            loadCart();
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProducts();
+            loadFeaturedProducts();
+            updateCartCount();
+        });
+
+        function loadFeaturedProducts() {
+            const homeProductsGrid = document.getElementById('homeProductsGrid');
+            // Show first 4 products on homepage
+            const featuredProducts = products.slice(0, 4);
+            
+            homeProductsGrid.innerHTML = featuredProducts.map(product => `
+                <div class="product-card" onclick="showProductDetail(${product.id})">
+                    <img src="${product.image}" alt="${product.name}" class="product-image">
+                    <div class="product-info">
+                        <h3 class="product-title">${product.name}</h3>
+                        <p class="product-description">${product.description}</p>
+                        <div class="product-price">${product.price}</div>
+                        <button class="add-to-cart" onclick="event.stopPropagation(); addToCart(${product.id})">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+</html>
